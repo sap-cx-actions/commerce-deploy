@@ -1,0 +1,70 @@
+name: 'commerce-deploy'
+description: 'Triggers the deployment process for the SAP Commerce Cloud project in the CCv2.'
+author: 'sap-cx-actions'
+
+# Branding, this will appear on the GitHub Marketplace.
+branding:
+  icon: 'cloud'
+  color: 'green'
+
+inputs:
+    token:
+        description: 'Your CCv2 API token.'
+        required: true
+
+    subscriptionCode:
+        description: 'The Subscription Code of the CCv2 environment.'
+        required: true
+
+    buildCode:
+        description: 'The build code to deploy.'
+        required: true
+
+    environmentCode:
+        description: 'The environment code to deploy the build to.'
+        required: true
+
+    databaseUpdateMode:
+        description: 'The database update mode, any of the following: NONE, UPDATE, INITIALIZE (Be sure to use INITIALIZE). Default is NONE.'
+        default: 'NONE'
+        required: true
+
+    deploymentMode:
+        description: 'The deployment mode, any of the following: ROLLING_UPDATE, RECREATE, GREEN. Default is ROLLING_UPDATE.'
+        default: 'ROLLING_UPDATE'
+        required: true
+
+    checkStatusInterval:
+        description: 'The interval in milliseconds to check the status of the build. Default is 300000 ms (5 minutes).'
+        default: '300000' # 5 minutes
+        required: false
+
+    retryOnFailure:
+        description: 'Whether to retry the build creation if it fails.'
+        default: 'false'
+        required: false
+
+    maxRetries:
+        description: 'The maximum number of retries. Default is 3.'
+        default: '3'
+        required: false
+
+    notify:
+        description: 'Whether to send notifications, if true, the webhookUrl is required.'
+        default: 'false'
+        required: false
+
+    destination:
+        description: 'The URL or the email addresses (comma separated) to send notifications.'
+        required: false
+
+outputs:
+  deploymentCode:
+    description: 'The deployment code of the deployment.'
+
+  deploymentStatus:
+    description: 'The status of the deployment.'
+
+runs:
+  using: node20
+  main: dist/index.js

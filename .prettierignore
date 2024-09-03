@@ -1,0 +1,6 @@
+# Ignore artifacts:
+.github/*
+build
+coverage
+action.yml
+tsconfig.json

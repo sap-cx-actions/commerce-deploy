@@ -1,0 +1,45 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - main
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  test-deploy-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Test Local Action
+        id: test-action
+        uses: ./
+        with:
+          token: ${{ secrets.SAP_CCV2_TOKEN }}
+          subscriptionCode: ${{ secrets.SAP_CCV2_SUB_CODE }}
+          buildCode: '20240903.1'
+          environmentCode: 'd1'
+          databaseUpdateMode: 'UPDATE'
+          deploymentMode: 'ROLLING_UPDATE'
+          checkStatusInterval: 60000
+          retryOnFailure: true
+          maxRetries: 5
+          notify: true
+          destination: ${{ secrets.WEBHOOK_URL }}
+
+      - name: Print Output
+        id: output
+        run: |
+          echo "Deployment Code: ${{ steps.test-action.outputs.deploymentCode }}, Deployment Status: ${{ steps.test-action.outputs.deploymentStatus }}"
