@@ -62,7 +62,7 @@ export async function run(): Promise<void> {
       core.debug(`Deployment Progress: ${JSON.stringify(deploymentProgress, null, 2)}`);
 
       await core.summary
-        .addHeading('SAP Commerce Cloud - Deployment Summary :package:')
+        .addHeading('SAP Commerce Cloud - Deployment Summary :sparkle:')
         .addTable([
           [
             { data: 'Deployment Code', header: true },
