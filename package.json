@@ -1,6 +1,6 @@
 {
   "name": "commerce-deploy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "GitHub Action to trigger the Deployment in SAP Commerce Cloud in Public Cloud (CCv2)",
   "author": "sap-cx-actions",
   "private": false,
@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "@sap-cx-actions/commerce-services": "^0.0.4",
+    "@sap-cx-actions/commerce-services": "^0.0.5",
     "@sap-cx-actions/models": "^0.0.14",
     "@sap-cx-actions/notifier": "^0.0.5",
     "dayjs": "^1.11.13"
