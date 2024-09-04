@@ -43,17 +43,23 @@ export async function run(): Promise<void> {
       strategy: input.deploymentMode
     };
 
+    const deploymentResponse: DeploymentResponse = await deploymentService.createDeployment(deploymentRequest);
+    core.debug(`Create Deployment Response: ${JSON.stringify(deploymentResponse, null, 2)}`);
+    deploymentCode = deploymentResponse.code;
+
     // Get the deployment details
     if (deploymentCode) {
       const getDeployment: DeploymentResponse = await deploymentService.getDeployment(deploymentCode);
-
-      deploymentCode = getDeployment.code;
+      core.debug(`Get Deployment Response: ${JSON.stringify(getDeployment, null, 2)}`);
       deploymentStatus = getDeployment.status;
 
       if (input.notify && input.destination) {
         core.debug('Sending notification...');
-        await notifier.notify(NotificationType.DEPLOYMENT_STARTED, getDeployment);
+        //await notifier.notify(NotificationType.DEPLOYMENT_STARTED, getDeployment);
       }
+
+      const deploymentProgress = await deploymentService.getDeploymentProgress(deploymentCode);
+      core.debug(`Deployment Progress: ${JSON.stringify(deploymentProgress, null, 2)}`);
 
       await core.summary
         .addHeading('SAP Commerce Cloud - Deployment Summary :package:')
