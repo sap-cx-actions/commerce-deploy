@@ -54,8 +54,7 @@ export async function run(): Promise<void> {
       deploymentStatus = getDeployment.status;
 
       if (input.notify && input.destination) {
-        core.debug('Sending notification...');
-        //await notifier.notify(NotificationType.DEPLOYMENT_STARTED, getDeployment);
+        await notifier.notify(NotificationType.DEPLOYMENT_STARTED, getDeployment);
       }
 
       const deploymentProgress = await deploymentService.getDeploymentProgress(deploymentCode);
@@ -67,6 +66,7 @@ export async function run(): Promise<void> {
           [
             { data: 'Deployment Code', header: true },
             { data: 'Build Code', header: true },
+            { data: 'Environment Code', header: true },
             { data: 'Data Migration Mode', header: true },
             { data: 'Deployment Strategy', header: true },
             { data: 'Started', header: true }
@@ -74,12 +74,16 @@ export async function run(): Promise<void> {
           [
             getDeployment.code,
             getDeployment.buildCode,
+            getDeployment.environmentCode,
             getDeployment.databaseUpdateMode,
             getDeployment.strategy,
             `${dayjs(getDeployment.createdTimestamp).format('MMMM DD, YYYY hh:mm:ss A')}`
           ]
         ])
-        .addLink('View in Cloud Portal', 'https://portal.commerce.ondemand.com')
+        .addLink(
+          'View in Cloud Portal',
+          `https://portal.commerce.ondemand.com/subscription/${getDeployment.subscriptionCode}/applications/commerce-cloud/environments/${getDeployment.environmentCode}/deployments/${getDeployment.code}`
+        )
         .write();
     }
 
