@@ -54,7 +54,7 @@
     "@actions/core": "^1.10.1",
     "@sap-cx-actions/commerce-services": "^0.0.5",
     "@sap-cx-actions/models": "^0.0.15",
-    "@sap-cx-actions/notifier": "^0.0.10",
+    "@sap-cx-actions/notifier": "^0.0.11",
     "dayjs": "^1.11.13"
   }
 }
