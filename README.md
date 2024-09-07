@@ -10,19 +10,20 @@ Public Cloud (CCv2) projects.
 ### 🔧 Planned Items
 
 - [ ] **Deployment Notification**: Sends a notification when a deployment is triggered in CCv2.
-- [ ] **Deployment Status Notification**: Frequently check the deployment status and send notifications when success or failure.
+- [ ] **Deployment Status Notification**: Frequently check the deployment status and send notifications when success or
+      failure.
 - [ ] **Testing**: Improve test coverage with end-to-end tests.
 - [ ] **Notifications**: Notify the user via email or webhook when the build is triggered or completed.
-    - [ ] Create Build: Triggered with deployment is created in CCv2.
-    - [ ] Build Progress: Check the deployment status and send notifications. (Is it required?)
-    - [ ] Build Completed: Triggered when the deployment is completed in CCv2 whether it is success or failure.
-    - [ ] Slack: Send notifications to Slack.
-    - [ ] Email: Send notifications to email.
-        - [ ] SendGrid: Send notifications using SendGrid.
-        - [ ] AWS SES: Send notifications using AWS SES.
-        - [ ] Custom SMTP: Send notifications using custom SMTP.
-        - [ ] Similar SMTP services.
-    - [ ] Microsoft Teams: Send notifications to Microsoft Teams.
+  - [ ] Create Build: Triggered with deployment is created in CCv2.
+  - [ ] Build Progress: Check the deployment status and send notifications. (Is it required?)
+  - [ ] Build Completed: Triggered when the deployment is completed in CCv2 whether it is success or failure.
+  - [ ] Slack: Send notifications to Slack.
+  - [ ] Email: Send notifications to email.
+    - [ ] SendGrid: Send notifications using SendGrid.
+    - [ ] AWS SES: Send notifications using AWS SES.
+    - [ ] Custom SMTP: Send notifications using custom SMTP.
+    - [ ] Similar SMTP services.
+  - [ ] Microsoft Teams: Send notifications to Microsoft Teams.
 
 ## Getting Started
 
@@ -74,7 +75,7 @@ jobs:
           buildCode: '20240910.1'
           environmentCode: 'd1'
           databaseUpdateMode: 'UPDATE'
-          deploymentMode: 'ROLLING_UPDATE'          
+          deploymentMode: 'ROLLING_UPDATE'
           notify: true
           destination: ${{ secrets.WEBHOOK_URL }}
 ```
@@ -89,7 +90,8 @@ jobs:
 - `deploymentMode` - **Required**. The deployment strategy. Example: `ROLLING_UPDATE`, `RECREATE`, `GREEN`.
 - `notify` - **Optional**. Send notifications to the provided destination.
 - `destination` - **Optional**. The destination to send notifications.
-- 
+-
+
 ### Outputs
 
 - `deploymentCode` - The deployment code of the current deployment.

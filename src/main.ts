@@ -1,12 +1,13 @@
 import * as core from '@actions/core';
 import {
-  NotificationType,
-  DeploymentStatus,
   DataMigrationMode,
+  DeploymentInput,
   DeploymentMode,
+  DeploymentProgress,
   DeploymentRequest,
   DeploymentResponse,
-  DeploymentInput
+  DeploymentStatus,
+  NotificationType
 } from '@sap-cx-actions/models';
 import { DeploymentService } from '@sap-cx-actions/commerce-services';
 import { Notifier } from '@sap-cx-actions/notifier';
@@ -15,6 +16,8 @@ import dayjs from 'dayjs';
 export async function run(): Promise<void> {
   let deploymentCode: string | undefined;
   let deploymentStatus: DeploymentStatus | undefined;
+  let deploymentProgress: DeploymentProgress;
+  let deploymentResponse: DeploymentResponse;
 
   try {
     core.info('Triggering the CCv2 Cloud Deployment');
@@ -33,7 +36,8 @@ export async function run(): Promise<void> {
     };
 
     const deploymentService = new DeploymentService(input.token, input.subscriptionCode);
-    const notifier = new Notifier(input.destination);
+    const shouldNotify = (): boolean => input.notify && input.destination !== '';
+    const notifier = shouldNotify() ? new Notifier(input.destination) : null;
 
     // Create a new deployment
     const deploymentRequest: DeploymentRequest = {
@@ -43,22 +47,52 @@ export async function run(): Promise<void> {
       strategy: input.deploymentMode
     };
 
-    const deploymentResponse: DeploymentResponse = await deploymentService.createDeployment(deploymentRequest);
-    core.debug(`Create Deployment Response: ${JSON.stringify(deploymentResponse, null, 2)}`);
+    deploymentResponse = await deploymentService.createDeployment(deploymentRequest);
+    core.debug(`Create Deployment Response: ${JSON.stringify(deploymentResponse)}`);
     deploymentCode = deploymentResponse.code;
 
     // Get the deployment details
     if (deploymentCode) {
-      const getDeployment: DeploymentResponse = await deploymentService.getDeployment(deploymentCode);
-      core.debug(`Get Deployment Response: ${JSON.stringify(getDeployment, null, 2)}`);
-      deploymentStatus = getDeployment.status;
+      deploymentResponse = await deploymentService.getDeployment(deploymentCode);
+      core.debug(`Get Deployment Response: ${JSON.stringify(deploymentResponse)}`);
+      deploymentStatus = deploymentResponse.status;
 
-      if (input.notify && input.destination) {
-        await notifier.notify(NotificationType.DEPLOYMENT_STARTED, getDeployment);
+      if (notifier) {
+        await notifier.notify(NotificationType.DEPLOYMENT_STARTED, deploymentResponse);
       }
 
-      const deploymentProgress = await deploymentService.getDeploymentProgress(deploymentCode);
-      core.debug(`Deployment Progress: ${JSON.stringify(deploymentProgress, null, 2)}`);
+      do {
+        deploymentProgress = await deploymentService.getDeploymentProgress(deploymentCode);
+        core.debug(`Deployment Progress: ${JSON.stringify(deploymentProgress)}`);
+
+        if (
+          deploymentProgress.deploymentStatus === DeploymentStatus.DEPLOYING &&
+          deploymentProgress.percentage !== undefined &&
+          deploymentProgress.percentage !== null &&
+          deploymentProgress.percentage < 100
+        ) {
+          deploymentStatus = DeploymentStatus.DEPLOYING;
+          console.log(
+            `Deployment is in progress. ${deploymentProgress.percentage}% completed, waiting for ${input.checkStatusInterval}ms`
+          );
+          await new Promise(resolve => setTimeout(resolve, input.checkStatusInterval));
+        } else if (deploymentProgress.deploymentStatus === DeploymentStatus.FAIL) {
+          deploymentStatus = DeploymentStatus.FAIL;
+          core.setFailed(`Deployment failed for the Build Code: ${deploymentResponse.code}`);
+          deploymentProgress.deploymentStatus = DeploymentStatus.FAIL;
+          if (notifier) {
+            await notifier.notify(NotificationType.DEPLOYMENT_UNDEPLOYED, deploymentResponse);
+          }
+          break;
+        } else if (deploymentProgress.deploymentStatus === DeploymentStatus.DEPLOYED) {
+          deploymentStatus = DeploymentStatus.DEPLOYED;
+          core.info(`Deployment completed successfully for the Build Code: ${deploymentResponse.code}`);
+          if (notifier) {
+            await notifier.notify(NotificationType.DEPLOYMENT_DEPLOYED, deploymentResponse);
+          }
+          break;
+        }
+      } while (deploymentProgress.deploymentStatus === DeploymentStatus.DEPLOYING);
 
       await core.summary
         .addHeading('SAP Commerce Cloud - Deployment Summary :sparkle:')
@@ -72,17 +106,17 @@ export async function run(): Promise<void> {
             { data: 'Started', header: true }
           ],
           [
-            getDeployment.code,
-            getDeployment.buildCode,
-            getDeployment.environmentCode,
-            getDeployment.databaseUpdateMode,
-            getDeployment.strategy,
-            `${dayjs(getDeployment.createdTimestamp).format('MMMM DD, YYYY hh:mm:ss A')}`
+            deploymentResponse.code,
+            deploymentResponse.buildCode,
+            deploymentResponse.environmentCode,
+            deploymentResponse.databaseUpdateMode,
+            deploymentResponse.strategy,
+            `${dayjs(deploymentResponse.createdTimestamp).format('MMMM DD, YYYY hh:mm:ss A')}`
           ]
         ])
         .addLink(
           'View in Cloud Portal',
-          `https://portal.commerce.ondemand.com/subscription/${getDeployment.subscriptionCode}/applications/commerce-cloud/environments/${getDeployment.environmentCode}/deployments/${getDeployment.code}`
+          `https://portal.commerce.ondemand.com/subscription/${deploymentResponse.subscriptionCode}/applications/commerce-cloud/environments/${deploymentResponse.environmentCode}/deployments/${deploymentResponse.code}`
         )
         .write();
     }
