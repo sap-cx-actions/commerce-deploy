@@ -81,7 +81,7 @@ export async function run(): Promise<void> {
           core.setFailed(`Deployment failed for the Build Code: ${deploymentResponse.code}`);
           deploymentProgress.deploymentStatus = DeploymentStatus.FAIL;
           if (notifier) {
-            await notifier.notify(NotificationType.DEPLOYMENT_UNDEPLOYED, deploymentResponse);
+            await notifier.notify(NotificationType.DEPLOYMENT_FAILED, deploymentResponse);
           }
           break;
         } else if (deploymentProgress.deploymentStatus === DeploymentStatus.DEPLOYED) {
