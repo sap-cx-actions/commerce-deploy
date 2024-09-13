@@ -111,7 +111,7 @@ export async function run(): Promise<void> {
             deploymentResponse.environmentCode,
             deploymentResponse.databaseUpdateMode,
             deploymentResponse.strategy,
-            `${dayjs(deploymentResponse.createdTimestamp).format('MMMM DD, YYYY hh:mm:ss A')}`
+            `${dayjs(deploymentResponse.createdTimestamp).format('MMMM DD, YYYY hh:mm:ss A Z')}`
           ]
         ])
         .addLink(
