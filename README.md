@@ -6,24 +6,25 @@ Public Cloud (CCv2) projects.
 ### 🚀 Completed Items
 
 - [x] **Trigger Deployment**: Trigger SAP Commerce Cloud deployment.
+- [x] **Deployment Notification**: Sends a notification when a deployment is triggered in CCv2.
+- [x] **Deployment Status Notification**: Frequently check the deployment status and send notifications when success or
+      failure.
+- [x] **Notifications**: Notify the user via email or webhook when the build is triggered or completed.
+  - [x] Trigger Deployment: Triggered with deployment is created in CCv2.
+  - [x] Deployment Completed: Triggered when the deployment is completed in CCv2 whether it is success or failure.
+  - [x] Slack: Send notifications to Slack.
+  - [x] Microsoft Teams: Send notifications to Microsoft Teams.
 
 ### 🔧 Planned Items
 
-- [ ] **Deployment Notification**: Sends a notification when a deployment is triggered in CCv2.
-- [ ] **Deployment Status Notification**: Frequently check the deployment status and send notifications when success or
-      failure.
 - [ ] **Testing**: Improve test coverage with end-to-end tests.
 - [ ] **Notifications**: Notify the user via email or webhook when the build is triggered or completed.
-  - [ ] Create Build: Triggered with deployment is created in CCv2.
-  - [ ] Build Progress: Check the deployment status and send notifications. (Is it required?)
-  - [ ] Build Completed: Triggered when the deployment is completed in CCv2 whether it is success or failure.
-  - [ ] Slack: Send notifications to Slack.
+  - [ ] Deployment Progress: Check the deployment status and send notifications. (Is it required?)
   - [ ] Email: Send notifications to email.
     - [ ] SendGrid: Send notifications using SendGrid.
     - [ ] AWS SES: Send notifications using AWS SES.
     - [ ] Custom SMTP: Send notifications using custom SMTP.
     - [ ] Similar SMTP services.
-  - [ ] Microsoft Teams: Send notifications to Microsoft Teams.
 
 ## Getting Started
 
@@ -82,15 +83,16 @@ jobs:
 
 ### Inputs
 
-- `token` - **Required**. SAP Commerce Cloud in the Public Cloud (CCv2) API Token.
-- `subscriptionCode` - **Required**. SAP Commerce Cloud in the Public Cloud (CCv2) Subscription Code.
-- `buildCode` - **Required**. The build code to deploy.
-- `environmentCode` - **Required**. The environment code to deploy. Example: `d1`, `s1`, `p1`.
-- `databaseUpdateMode` - **Required**. The database update mode. Example: `NONE`, `UPDATE`, `INITIALIZE`.
-- `deploymentMode` - **Required**. The deployment strategy. Example: `ROLLING_UPDATE`, `RECREATE`, `GREEN`.
-- `notify` - **Optional**. Send notifications to the provided destination.
-- `destination` - **Optional**. The destination to send notifications.
--
+| Attribute          | Purpose                                                                                                                                                                                                   | Required | Example                               |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------- |
+| token              | SAP Commerce Cloud in the Public Cloud (CCv2) [API Token](https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/0fa6bcf4736c46f78c248512391eb467/65e64c9602534b8aaf25bb119670614f.html?locale=en-US). | True     |                                       |
+| subscriptionCode   | SAP Commerce Cloud in the Public Cloud (CCv2) Subscription Code.                                                                                                                                          | True     |                                       |
+| buildCode          | The build code to deploy, output from the [@sap-cx-actions/commerce-build](https://github.com/sap-cx-actions/commerce-build).                                                                             | True     |                                       |
+| environmentCode    | The environment code to deploy.                                                                                                                                                                           | True     | `d1`, `s1`, `p1`                      |
+| databaseUpdateMode | The database update mode.                                                                                                                                                                                 | True     | `NONE`, `UPDATE`, `INITIALIZE`        |
+| deploymentMode     | The deployment strategy.                                                                                                                                                                                  | True     | `ROLLING_UPDATE`, `RECREATE`, `GREEN` |
+| notify             | Send notifications to the provided destination.                                                                                                                                                           | False    | `true`, `false`                       |
+| destination        | The destination to send notifications.                                                                                                                                                                    | False    |                                       |
 
 ### Outputs
 
