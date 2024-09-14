@@ -18,6 +18,11 @@ jobs:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
 
+    env:
+      SAP_CCV2_API_TOKEN: ${{ secrets.SAP_CCV2_API_TOKEN }}
+      SAP_CCV2_SUB_CODE: ${{ secrets.SAP_CCV2_SUB_CODE }}
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+
     steps:
       - name: Checkout
         id: checkout
@@ -27,17 +32,12 @@ jobs:
         id: test-action
         uses: ./
         with:
-          token: ${{ secrets.SAP_CCV2_TOKEN }}
-          subscriptionCode: ${{ secrets.SAP_CCV2_SUB_CODE }}
           buildCode: '20240903.1'
           environmentCode: 'd1'
           databaseUpdateMode: 'UPDATE'
           deploymentMode: 'ROLLING_UPDATE'
           checkStatusInterval: 60000
-          retryOnFailure: true
-          maxRetries: 5
           notify: true
-          destination: ${{ secrets.WEBHOOK_URL }}
 
       - name: Print Output
         id: output

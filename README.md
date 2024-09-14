@@ -61,38 +61,51 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
+    env:
+      SAP_CCV2_API_TOKEN: ${{ secrets.SAP_CCV2_API_TOKEN }}
+      SAP_CCV2_SUB_CODE: ${{ secrets.SAP_CCV2_SUB_CODE }}
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Trigger SAP Commerce Cloud Deployment
+        id: deploy-action
         uses: sap-cx-actions/commerce-deploy@v1
         with:
-          token: ${{ secrets.CCV2_API_TOKEN }}
-          subscriptionCode: ${{ secrets.CCV2_SUBSCRIPTION_CODE }}
           buildCode: '20240910.1'
           environmentCode: 'd1'
           databaseUpdateMode: 'UPDATE'
           deploymentMode: 'ROLLING_UPDATE'
           notify: true
-          destination: ${{ secrets.WEBHOOK_URL }}
+
+      - name: Print Output
+        id: output
+        run: |
+          echo "Deployment Code: ${{ steps.deploy-action.outputs.deploymentCode }}, Deployment Status: ${{ steps.deploy-action.outputs.deploymentStatus }}"
 ```
+
+### Environment Variables
+
+| Variable           | Purpose                                                                                                                                                                                                   | Required |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| SAP_CCV2_API_TOKEN | SAP Commerce Cloud in the Public Cloud (CCv2) [API Token](https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/0fa6bcf4736c46f78c248512391eb467/65e64c9602534b8aaf25bb119670614f.html?locale=en-US). | True     |
+| SAP_CCV2_SUB_CODE  | SAP Commerce Cloud in the Public Cloud (CCv2) Subscription Code                                                                                                                                           | True     |
+| WEBHOOK_URL        | The Webhook URL to send notifications.                                                                                                                                                                    | False    |
 
 ### Inputs
 
-| Attribute          | Purpose                                                                                                                                                                                                   | Required | Example                               |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------- |
-| token              | SAP Commerce Cloud in the Public Cloud (CCv2) [API Token](https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD/0fa6bcf4736c46f78c248512391eb467/65e64c9602534b8aaf25bb119670614f.html?locale=en-US). | True     |                                       |
-| subscriptionCode   | SAP Commerce Cloud in the Public Cloud (CCv2) Subscription Code.                                                                                                                                          | True     |                                       |
-| buildCode          | The build code to deploy, output from the [@sap-cx-actions/commerce-build](https://github.com/sap-cx-actions/commerce-build).                                                                             | True     |                                       |
-| environmentCode    | The environment code to deploy.                                                                                                                                                                           | True     | `d1`, `s1`, `p1`                      |
-| databaseUpdateMode | The database update mode.                                                                                                                                                                                 | True     | `NONE`, `UPDATE`, `INITIALIZE`        |
-| deploymentMode     | The deployment strategy.                                                                                                                                                                                  | True     | `ROLLING_UPDATE`, `RECREATE`, `GREEN` |
-| notify             | Send notifications to the provided destination.                                                                                                                                                           | False    | `true`, `false`                       |
-| destination        | The destination to send notifications.                                                                                                                                                                    | False    |                                       |
+| Attribute          | Purpose                                                                                                                       | Required | Example                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------- |
+| buildCode          | The build code to deploy, output from the [@sap-cx-actions/commerce-build](https://github.com/sap-cx-actions/commerce-build). | True     |                                       |
+| environmentCode    | The environment code to deploy.                                                                                               | True     | `d1`, `s1`, `p1`                      |
+| databaseUpdateMode | The database update mode.                                                                                                     | True     | `NONE`, `UPDATE`, `INITIALIZE`        |
+| deploymentMode     | The deployment strategy.                                                                                                      | True     | `ROLLING_UPDATE`, `RECREATE`, `GREEN` |
+| notify             | Send notifications to the provided destination.                                                                               | False    | `true`, `false`                       |
 
 ### Outputs
 

@@ -8,14 +8,6 @@ branding:
   color: 'green'
 
 inputs:
-    token:
-        description: 'Your CCv2 API token.'
-        required: true
-
-    subscriptionCode:
-        description: 'The Subscription Code of the CCv2 environment.'
-        required: true
-
     buildCode:
         description: 'The build code to deploy.'
         required: true
@@ -39,28 +31,14 @@ inputs:
         default: '300000' # 5 minutes
         required: false
 
-    retryOnFailure:
-        description: 'Whether to retry the build creation if it fails.'
-        default: 'false'
-        required: false
-
-    maxRetries:
-        description: 'The maximum number of retries. Default is 3.'
-        default: '3'
-        required: false
-
     notify:
         description: 'Whether to send notifications, if true, the webhookUrl is required.'
         default: 'false'
         required: false
 
-    destination:
-        description: 'The URL or the email addresses (comma separated) to send notifications.'
-        required: false
-
 outputs:
   deploymentCode:
-    description: 'The deployment code of the deployment.'
+    description: 'The code of the deployment.'
 
   deploymentStatus:
     description: 'The status of the deployment.'
