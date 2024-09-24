@@ -36,6 +36,11 @@ inputs:
         default: 'false'
         required: false
 
+    dryRun:
+        description: 'Whether to run the action in dry-run mode. If true, the action will not trigger the deployment in actual CCv2.'
+        default: 'false'
+        required: false
+
 outputs:
   deploymentCode:
     description: 'The code of the deployment.'

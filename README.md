@@ -82,6 +82,7 @@ jobs:
           databaseUpdateMode: 'UPDATE'
           deploymentMode: 'ROLLING_UPDATE'
           notify: true
+          dryRun: false
 
       - name: Print Output
         id: output
@@ -99,13 +100,14 @@ jobs:
 
 ### Inputs
 
-| Attribute          | Purpose                                                                                                                       | Required | Example                               |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------- |
-| buildCode          | The build code to deploy, output from the [@sap-cx-actions/commerce-build](https://github.com/sap-cx-actions/commerce-build). | True     |                                       |
-| environmentCode    | The environment code to deploy.                                                                                               | True     | `d1`, `s1`, `p1`                      |
-| databaseUpdateMode | The database update mode.                                                                                                     | True     | `NONE`, `UPDATE`, `INITIALIZE`        |
-| deploymentMode     | The deployment strategy.                                                                                                      | True     | `ROLLING_UPDATE`, `RECREATE`, `GREEN` |
-| notify             | Send notifications to the provided destination.                                                                               | False    | `true`, `false`                       |
+| Attribute          | Purpose                                                                                                                       | Required | Default | Example                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------------------------------------- |
+| buildCode          | The build code to deploy, output from the [@sap-cx-actions/commerce-build](https://github.com/sap-cx-actions/commerce-build). | True     |         |                                       |
+| environmentCode    | The environment code to deploy.                                                                                               | True     |         | `d1`, `s1`, `p1`                      |
+| databaseUpdateMode | The database update mode.                                                                                                     | True     |         | `NONE`, `UPDATE`, `INITIALIZE`        |
+| deploymentMode     | The deployment strategy.                                                                                                      | True     |         | `ROLLING_UPDATE`, `RECREATE`, `GREEN` |
+| notify             | Send notifications to the provided destination.                                                                               | False    | `false` | `true`, `false`                       |
+| dryRun             | Run the action in dry-run mode. If true, the action will not trigger the deployment in actual CCv2.                           | False    | `false` | `false`                               |
 
 ### Outputs
 

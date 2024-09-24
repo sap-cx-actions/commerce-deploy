@@ -38,6 +38,7 @@ jobs:
           deploymentMode: 'ROLLING_UPDATE'
           checkStatusInterval: 60000
           notify: true
+          dryRun: true
 
       - name: Print Output
         id: output
