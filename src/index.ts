@@ -8,7 +8,7 @@ import {
 } from '@sap-cx-actions/models';
 import { DeploymentService } from '@sap-cx-actions/commerce-services';
 import { Notifier } from '@sap-cx-actions/notifier';
-import { addSummary, getInputs, validateInputs } from './utils';
+import { addSummary, buildNotification, getInputs, validateInputs } from './utils';
 
 export async function run(): Promise<void> {
   let deploymentCode: string | undefined;
@@ -46,7 +46,7 @@ export async function run(): Promise<void> {
       deploymentStatus = deploymentResponse.status;
 
       if (notifier) {
-        await notifier.notify(NotificationType.DEPLOYMENT_STARTED, deploymentResponse);
+        await notifier.notify(buildNotification(NotificationType.DEPLOYMENT_STARTED, deploymentResponse));
       }
 
       do {
@@ -69,14 +69,14 @@ export async function run(): Promise<void> {
           core.setFailed(`Deployment failed for the Build Code: ${deploymentResponse.code}`);
           deploymentProgress.deploymentStatus = DeploymentStatus.FAIL;
           if (notifier) {
-            await notifier.notify(NotificationType.DEPLOYMENT_FAILED, deploymentResponse);
+            await notifier.notify(buildNotification(NotificationType.DEPLOYMENT_FAILED, deploymentResponse));
           }
           break;
         } else if (deploymentProgress.deploymentStatus === DeploymentStatus.DEPLOYED) {
           deploymentStatus = DeploymentStatus.DEPLOYED;
           core.info(`Deployment completed successfully for the Build Code: ${deploymentResponse.code}`);
           if (notifier) {
-            await notifier.notify(NotificationType.DEPLOYMENT_DEPLOYED, deploymentResponse);
+            await notifier.notify(buildNotification(NotificationType.DEPLOYMENT_DEPLOYED, deploymentResponse));
           }
           break;
         }

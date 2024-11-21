@@ -41,6 +41,11 @@ inputs:
         default: 'false'
         required: false
 
+    timezone:
+      description: 'The timezone to use for the timestamps. Default is America/New_York.'
+      default: 'America/New_York'
+      required: false
+
 outputs:
   deploymentCode:
     description: 'The code of the deployment.'

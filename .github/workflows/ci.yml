@@ -39,6 +39,7 @@ jobs:
           checkStatusInterval: 60000
           notify: true
           dryRun: true
+          timezone: America/New_York
 
       - name: Print Output
         id: output

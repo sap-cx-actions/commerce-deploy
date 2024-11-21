@@ -1,6 +1,15 @@
 import * as core from '@actions/core';
-import { DataMigrationMode, DeploymentInput, DeploymentMode, DeploymentResponse } from '@sap-cx-actions/models';
+import * as github from '@actions/github';
 import dayjs from 'dayjs';
+
+import {
+  DataMigrationMode,
+  DeploymentInput,
+  DeploymentMode,
+  DeploymentResponse,
+  Notification,
+  NotificationType
+} from '@sap-cx-actions/models';
 import { SAP } from '@sap-cx-actions/commerce-services/src/constants';
 
 export const getInputs: DeploymentInput = {
@@ -15,8 +24,15 @@ export const getInputs: DeploymentInput = {
   maxRetries: 3,
   notify: core.getBooleanInput('notify'),
   webhookUrl: process.env.WEBHOOK_URL || '',
-  dryRun: core.getBooleanInput('dryRun')
+  dryRun: core.getBooleanInput('dryRun'),
+  timezone: core.getInput('timezone')
 };
+
+export function getWorkflowRunUrl(): string {
+  const { runId, repo } = github.context;
+  const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+  return `${serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${runId}`;
+}
 
 export function validateInputs(inputs: { [key: string]: string }): void {
   const errorMessages: string[] = [];
@@ -32,6 +48,17 @@ export function validateInputs(inputs: { [key: string]: string }): void {
     const errorMessage = `Validation Failed: ${errorMessages.join(', ')}`;
     throw new Error(errorMessage);
   }
+}
+
+export function buildNotification(type: NotificationType, content: any): Notification {
+  return {
+    type: type,
+    content: content,
+    info: {
+      timezone: getInputs.timezone,
+      workflowRunUrl: getWorkflowRunUrl()
+    }
+  };
 }
 
 export async function addSummary(deploymentResponse: DeploymentResponse): Promise<void> {
