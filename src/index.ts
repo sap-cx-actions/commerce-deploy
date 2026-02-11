@@ -6,9 +6,9 @@ import {
   DeploymentStatus,
   NotificationType
 } from '@sap-cx-actions/models';
-import { DeploymentService } from '@sap-cx-actions/commerce-services';
+import { DeploymentService, validateInputs } from '@sap-cx-actions/commerce-services';
 import { Notifier } from '@sap-cx-actions/notifier';
-import { addSummary, buildNotification, getInputs, validateInputs } from './utils';
+import { addSummary, buildNotification, getInputs } from './utils';
 
 export async function run(): Promise<void> {
   let deploymentCode: string | undefined;

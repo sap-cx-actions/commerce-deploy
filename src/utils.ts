@@ -38,22 +38,6 @@ export function getWorkflowRunUrl(): string {
   return `${serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${runId}`;
 }
 
-export function validateInputs(inputs: { [key: string]: string }): void {
-  const errorMessages: string[] = [];
-
-  for (const [key, value] of Object.entries(inputs)) {
-    if (!value) {
-      const errorMessage = `'${key}' is required.`;
-      errorMessages.push(errorMessage);
-    }
-  }
-
-  if (errorMessages.length > 0) {
-    const errorMessage = `Validation Failed: ${errorMessages.join(', ')}`;
-    throw new Error(errorMessage);
-  }
-}
-
 export function buildNotification(type: NotificationType, content: any): Notification {
   return {
     type: type,

@@ -128,15 +128,6 @@ describe('utils', () => {
     expect(utils.getWorkflowRunUrl()).toBe('https://github.com/acme/proj/actions/runs/99');
   });
 
-  it('validates required inputs', async () => {
-    const utils = await loadUtils();
-
-    expect(() => utils.validateInputs({ token: 't', sub: 's' })).not.toThrow();
-    expect(() => utils.validateInputs({ token: '', sub: '' })).toThrow(
-      "Validation Failed: 'token' is required., 'sub' is required."
-    );
-  });
-
   it('builds a notification with workflow url and timezone', async () => {
     const utils = await loadUtils({
       GITHUB_REPOSITORY: 'org/repo',
