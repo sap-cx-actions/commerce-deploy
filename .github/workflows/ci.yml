@@ -21,6 +21,10 @@ jobs:
     env:
       SAP_CCV2_API_TOKEN: ${{ secrets.SAP_CCV2_API_TOKEN }}
       SAP_CCV2_SUB_CODE: ${{ secrets.SAP_CCV2_SUB_CODE }}
+      SAP_CCV2_CLIENT_ID: ${{ secrets.SAP_CCV2_CLIENT_ID }}
+      SAP_CCV2_CLIENT_SECRET: ${{ secrets.SAP_CCV2_CLIENT_SECRET }}
+      SAP_CCV2_TOKEN_ENDPOINT: ${{ secrets.SAP_CCV2_TOKEN_ENDPOINT }}
+      SAP_CCV2_RESOURCE: ${{ secrets.SAP_CCV2_RESOURCE }}
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
     steps:
