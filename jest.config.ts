@@ -85,7 +85,18 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    '^@actions/core$': '<rootDir>/node_modules/@actions/core/lib/core.js',
+    '^@actions/github$': '<rootDir>/node_modules/@actions/github/lib/github.js',
+    '^@actions/http-client$': '<rootDir>/node_modules/@actions/http-client/lib/index.js',
+    '^@actions/http-client/lib/(.*)$': '<rootDir>/node_modules/@actions/http-client/lib/$1.js',
+    '^@actions/exec$': '<rootDir>/node_modules/@actions/exec/lib/exec.js',
+    '^@actions/io$': '<rootDir>/node_modules/@actions/io/lib/io.js',
+    '^@actions/io/lib/(.*)$': '<rootDir>/node_modules/@actions/io/lib/$1.js',
+    '^synckit$': '<rootDir>/node_modules/synckit/lib/index.cjs',
+    '^@pkgr/core$': '<rootDir>/node_modules/@pkgr/core/lib/index.cjs',
+    '^dedent$': '<rootDir>/node_modules/dedent/dist/dedent.js'
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -169,8 +180,17 @@ const config: Config = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.ts$': 'ts-jest'
+    '^.+\\.[tj]s$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          allowJs: true
+        }
+      }
+    ]
   },
+
+  transformIgnorePatterns: [],
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [

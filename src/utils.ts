@@ -15,6 +15,10 @@ import { SAP } from '@sap-cx-actions/commerce-services/src/constants';
 export const getInputs: DeploymentInput = {
   token: process.env.SAP_CCV2_API_TOKEN || '',
   subscriptionCode: process.env.SAP_CCV2_SUB_CODE || '',
+  tokenEndpoint: process.env.SAP_CCV2_TOKEN_ENDPOINT || '',
+  clientId: process.env.SAP_CCV2_CLIENT_ID || '',
+  clientSecret: process.env.SAP_CCV2_CLIENT_SECRET || '',
+  resource: process.env.SAP_CCV2_RESOURCE || '',
   buildCode: core.getInput('buildCode', { required: true }),
   environmentCode: core.getInput('environmentCode'),
   databaseUpdateMode: core.getInput('databaseUpdateMode') as DataMigrationMode,
@@ -84,7 +88,7 @@ export async function addSummary(deploymentResponse: DeploymentResponse): Promis
     ])
     .addLink(
       'View in Cloud Portal',
-      SAP.CX.Actions.CLOUD_PORTAL_URL +
+      SAP.CX.Actions.CLOUD_PORTAL_API_URL +
         `/subscription/${deploymentResponse.subscriptionCode}/applications/commerce-cloud/environments/${deploymentResponse.environmentCode}/deployments/${deploymentResponse.code}`
     )
     .write();

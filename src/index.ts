@@ -21,9 +21,18 @@ export async function run(): Promise<void> {
     const input = getInputs;
 
     // Validate required inputs
-    validateInputs({ token: input.token, subscriptionCode: input.subscriptionCode });
+    validateInputs({
+      clientId: input.clientId,
+      clientSecret: input.clientSecret,
+      subscriptionCode: input.subscriptionCode
+    });
 
-    const deploymentService = new DeploymentService(input.token, input.subscriptionCode, input.dryRun);
+    const deploymentService = new DeploymentService(
+      input.clientId,
+      input.clientSecret,
+      input.subscriptionCode,
+      input.dryRun
+    );
     const shouldNotify = (): boolean => input.notify && input.webhookUrl !== '';
     const notifier = shouldNotify() ? new Notifier(input.webhookUrl) : null;
 
